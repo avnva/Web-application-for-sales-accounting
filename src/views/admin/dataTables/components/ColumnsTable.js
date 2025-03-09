@@ -138,7 +138,7 @@ export default function ColumnTable(props) {
           fontWeight="700"
           lineHeight="100%"
         >
-          4-Columns Table
+          Последние продажи
         </Text>
         <Menu />
       </Flex>
