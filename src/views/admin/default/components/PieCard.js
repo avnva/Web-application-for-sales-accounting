@@ -27,7 +27,7 @@ export default function PieCard({ pieData, ...rest }) {
     <Card p="20px" align="left" direction="column" w="100%" {...rest}>
       <Flex px={{ base: "0px", "2xl": "10px" }} justifyContent="space-between" alignItems="left" w="100%" mb="8px">
         <Text color={textColor} fontSize="md" fontWeight="600" mt="4px">
-          Популярные категории
+          Популярные категории месяца
         </Text>
       </Flex>
 

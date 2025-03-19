@@ -195,23 +195,7 @@ export default function TotalSpent(props) {
               </MenuItem>
             </MenuList>
           </Menu>
-          {/* Кнопка с графиком */}
-          <Button
-            ms='auto'
-            align='center'
-            justifyContent='center'
-            bg={bgButton}
-            _hover={bgHover}
-            _focus={bgFocus}
-            _active={bgFocus}
-            w='37px'
-            h='37px'
-            lineHeight='100%'
-            borderRadius='10px'
-            {...rest}
-          >
-            <Icon as={MdBarChart} color={iconColor} w='24px' h='24px' />
-          </Button>
+
         </Flex>
       </Flex>
       <Flex w='100%' flexDirection={{ base: "column", lg: "row" }}>
