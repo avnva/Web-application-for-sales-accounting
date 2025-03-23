@@ -28,17 +28,18 @@ export default function UserReports() {
     orders: 0,
     revenue: 0,
   });
+
   const [tableDataPie, setTableDataPie] = useState([]);
   const [tableDataCheckProducts, setTableDataCheckProducts] = useState([]);
   const [tableDataCheckClients, setTableDataCheckClients] = useState([]);
   const [tableDataComplex, setTableDataComplex] = useState([]);
+  const [tableDataTotalSpent, setTableDataTotalSpent] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const statsResponse = await fetch("/data/statistics.json");
-        const stats = await statsResponse.json();
-        setStatistics(stats);
+        setStatistics(await statsResponse.json());
 
         const pieResponse = await fetch("/data/tableDataPie.json");
         setTableDataPie(await pieResponse.json());
@@ -51,6 +52,12 @@ export default function UserReports() {
 
         const complexResponse = await fetch("/data/tableDataComplex.json");
         setTableDataComplex(await complexResponse.json());
+
+        const totalSpentResponse = await fetch("/data/tableDataTotalSpent.json");
+        const totalSpentData = await totalSpentResponse.json();
+        setTableDataTotalSpent(totalSpentData);
+        console.log("Загруженные данные для TotalSpent:", totalSpentData);
+
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       }
@@ -85,7 +92,7 @@ export default function UserReports() {
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="20px">
-        <TotalSpent gridColumn={{ base: "span 1", md: "span 2", lg: "span 3" }} />
+        <TotalSpent gridColumn={{ base: "span 1", md: "span 2", lg: "span 3" }} tableDataTotalSpent={tableDataTotalSpent} />
         <PieCard gridColumn={{ base: "span 1", md: "span 2", lg: "span 1" }} pieData={tableDataPie} />
       </SimpleGrid>
 

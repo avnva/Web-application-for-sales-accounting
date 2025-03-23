@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import {
   Flex,
   Box,
@@ -27,7 +25,6 @@ import Card from 'components/card/Card';
 
 const columnHelper = createColumnHelper();
 
-// const columns = columnsDataCheck;
 export default function ColumnTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
@@ -110,7 +107,16 @@ export default function ColumnTable(props) {
       ),
     }),
   ];
-  const [data, setData] = React.useState(() => [...defaultData]);
+  
+const [data, setData] = React.useState([]);
+
+React.useEffect(() => {
+  if (tableData.length > 0) {
+    setData(tableData);
+  }
+}, [tableData]);
+
+  
   const table = useReactTable({
     data,
     columns,

@@ -2,21 +2,21 @@
   {
     "name": "Пшеничный",
     "percentage": 63,
-    "color": "brand.500"
+    "quantity": 120
   },
   {
     "name": "Ржаной",
     "percentage": 25,
-    "color": "#6AD2FF"
+    "quantity": 50
   },
   {
     "name": "Кукурузный",
     "percentage": 8,
-    "color": "#A259FF"
+    "quantity": 15
   },
   {
     "name": "Остальное",
     "percentage": 4,
-    "color": "gray.400"
+    "quantity": 10
   }
 ]
