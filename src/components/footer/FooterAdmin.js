@@ -28,27 +28,6 @@ export default function Footer() {
       justifyContent='space-between'
       px={{ base: "30px", md: "50px" }}
       pb='30px'>
-      <Text
-        color={textColor}
-        textAlign={{
-          base: "center",
-          xl: "start",
-        }}
-        mb={{ base: "20px", xl: "0px" }}>
-        {" "}
-        &copy; {1900 + new Date().getYear()}
-        <Text as='span' fontWeight='500' ms='4px'>
-          Horizon UI. All Rights Reserved. Made with love by
-          <Link
-            mx='3px'
-            color={textColor}
-            href='https://www.simmmple.com?ref=horizon-chakra-free'
-            target='_blank'
-            fontWeight='700'>
-            Simmmple!
-          </Link>
-        </Text>
-      </Text>
       <List display='flex'>
         <ListItem
           me={{
@@ -58,8 +37,8 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='mailto:hello@simmmple.com'>
-            Support
+            href='mailto:voynova.03@inbox.ru'>
+            Поддержка
           </Link>
         </ListItem>
         <ListItem
@@ -70,8 +49,8 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='https://www.simmmple.com/licenses?ref=horizon-chakra-free'>
-            License
+            href='https://github.com/avnva/Web-application-for-sales-accounting'>
+            Лицензия
           </Link>
         </ListItem>
         <ListItem
@@ -82,16 +61,8 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='https://simmmple.com/terms-of-service?ref=horizon-chakra-free'>
-            Terms of Use
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            fontWeight='500'
-            color={textColor}
-            href='https://www.blog.simmmple.com/?ref=horizon-chakra-free'>
-            Blog
+            href='https://github.com/avnva/Web-application-for-sales-accounting'>
+            Документация
           </Link>
         </ListItem>
       </List>
