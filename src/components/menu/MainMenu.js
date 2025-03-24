@@ -1,6 +1,4 @@
 import React from "react";
-
-// Chakra imports
 import {
   Icon,
   Flex,
@@ -9,21 +7,11 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  useDisclosure,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
-import {
-  MdOutlineMoreHoriz,
-  MdOutlinePerson,
-  MdOutlineCardTravel,
-  MdOutlineLightbulb,
-  MdOutlineSettings,
-} from "react-icons/md";
+import { MdOutlineMoreHoriz } from "react-icons/md";
 
-export default function Banner(props) {
-  const { ...rest } = props;
-
+export default function MainMenu({ options }) {
   const textColor = useColorModeValue("secondaryGray.500", "white");
   const textHover = useColorModeValue(
     { color: "secondaryGray.900", bg: "unset" },
@@ -45,15 +33,8 @@ export default function Banner(props) {
     { bg: "whiteAlpha.100" }
   );
 
-  // Ellipsis modals
-  const {
-    isOpen: isOpen1,
-    onOpen: onOpen1,
-    onClose: onClose1,
-  } = useDisclosure();
-
   return (
-    <Menu isOpen={isOpen1} onClose={onClose1}>
+    <Menu>
       <MenuButton
         align='center'
         justifyContent='center'
@@ -64,9 +45,7 @@ export default function Banner(props) {
         w='37px'
         h='37px'
         lineHeight='100%'
-        onClick={onOpen1}
-        borderRadius='10px'
-        {...rest}>
+        borderRadius='10px'>
         <Icon as={MdOutlineMoreHoriz} color={iconColor} w='24px' h='24px' />
       </MenuButton>
       <MenuList
@@ -79,85 +58,24 @@ export default function Banner(props) {
         boxShadow={bgShadow}
         borderRadius='20px'
         p='15px'>
-        <MenuItem
-          transition='0.2s linear'
-          color={textColor}
-          _hover={textHover}
-          p='0px'
-          borderRadius='8px'
-          _active={{
-            bg: "transparent",
-          }}
-          _focus={{
-            bg: "transparent",
-          }}
-          mb='10px'>
-          <Flex align='center'>
-            <Icon as={MdOutlinePerson} h='16px' w='16px' me='8px' />
-            <Text fontSize='sm' fontWeight='400'>
-              Panel 1
-            </Text>
-          </Flex>
-        </MenuItem>
-        <MenuItem
-          transition='0.2s linear'
-          p='0px'
-          borderRadius='8px'
-          color={textColor}
-          _hover={textHover}
-          _active={{
-            bg: "transparent",
-          }}
-          _focus={{
-            bg: "transparent",
-          }}
-          mb='10px'>
-          <Flex align='center'>
-            <Icon as={MdOutlineCardTravel} h='16px' w='16px' me='8px' />
-            <Text fontSize='sm' fontWeight='400'>
-              Panel 2
-            </Text>
-          </Flex>
-        </MenuItem>
-        <MenuItem
-          transition='0.2s linear'
-          p='0px'
-          borderRadius='8px'
-          color={textColor}
-          _hover={textHover}
-          _active={{
-            bg: "transparent",
-          }}
-          _focus={{
-            bg: "transparent",
-          }}
-          mb='10px'>
-          <Flex align='center'>
-            <Icon as={MdOutlineLightbulb} h='16px' w='16px' me='8px' />
-            <Text fontSize='sm' fontWeight='400'>
-              Panel 3
-            </Text>
-          </Flex>
-        </MenuItem>
-        <MenuItem
-          transition='0.2s linear'
-          color={textColor}
-          _hover={textHover}
-          p='0px'
-          borderRadius='8px'
-          _active={{
-            bg: "transparent",
-          }}
-          _focus={{
-            bg: "transparent",
-          }}>
-          <Flex align='center'>
-            <Icon as={MdOutlineSettings} h='16px' w='16px' me='8px' />
-            <Text fontSize='sm' fontWeight='400'>
-              Panel 4
-            </Text>
-          </Flex>
-        </MenuItem>
+        {options.map((option, index) => (
+          <MenuItem
+            key={index}
+            transition='0.2s linear'
+            color={textColor}
+            _hover={textHover}
+            p='0px'
+            borderRadius='8px'
+            _active={{ bg: "transparent" }}
+            _focus={{ bg: "transparent" }}
+            mb='10px'
+            onClick={option.action}>
+            <Flex align='center'>
+              <Icon as={option.icon} h='16px' w='16px' me='8px' />
+              <Text fontSize='sm' fontWeight='400'>{option.label}</Text>
+            </Flex>
+          </MenuItem>
+        ))}
       </MenuList>
     </Menu>
   );

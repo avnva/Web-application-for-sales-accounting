@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import {
   Flex,
   Box,
@@ -24,11 +22,9 @@ import {
 
 // Custom components
 import Card from 'components/card/Card';
-import Menu from 'components/menu/MainMenu';
 
 const columnHelper = createColumnHelper();
 
-// const columns = columnsDataCheck;
 export default function ColumnTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
@@ -36,8 +32,8 @@ export default function ColumnTable(props) {
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
   let defaultData = tableData;
   const columns = [
-    columnHelper.accessor('name', {
-      id: 'name',
+    columnHelper.accessor('ID', {
+      id: 'ID',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -56,8 +52,8 @@ export default function ColumnTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('progress', {
-      id: 'progress',
+    columnHelper.accessor('client', {
+      id: 'client',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -74,8 +70,8 @@ export default function ColumnTable(props) {
         </Text>
       ),
     }),
-    columnHelper.accessor('quantity', {
-      id: 'quantity',
+    columnHelper.accessor('cost', {
+      id: 'cost',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -111,7 +107,16 @@ export default function ColumnTable(props) {
       ),
     }),
   ];
-  const [data, setData] = React.useState(() => [...defaultData]);
+  
+const [data, setData] = React.useState([]);
+
+React.useEffect(() => {
+  if (tableData.length > 0) {
+    setData(tableData);
+  }
+}, [tableData]);
+
+  
   const table = useReactTable({
     data,
     columns,
@@ -140,7 +145,6 @@ export default function ColumnTable(props) {
         >
           Последние продажи
         </Text>
-        <Menu />
       </Flex>
       <Box>
         <Table variant="simple" color="gray.500" mb="24px" mt="12px">

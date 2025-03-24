@@ -14,7 +14,7 @@ import {
   MdFormatListBulleted,
 } from "react-icons/md";
 import CheckTable from "views/admin/default/components/CheckTable";
-import ComplexTable from "views/admin/default/components/ComplexTable";
+import ComplexTable from "views/admin/dataTables/components/ComplexTable";
 import PieCard from "views/admin/default/components/PieCard";
 import TotalSpent from "views/admin/default/components/TotalSpent";
 
@@ -56,7 +56,6 @@ export default function UserReports() {
         const totalSpentResponse = await fetch("/data/tableDataTotalSpent.json");
         const totalSpentData = await totalSpentResponse.json();
         setTableDataTotalSpent(totalSpentData);
-        console.log("Загруженные данные для TotalSpent:", totalSpentData);
 
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);

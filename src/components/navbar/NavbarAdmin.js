@@ -7,7 +7,7 @@ import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin';
 
 const pageNames = {
   'dashboard': { name: 'Главная', path: '/' },
-  'tables': { name: 'Таблицы', path: '/admin/tables' },
+  'tables': { name: 'Таблицы', path: '/admin/data-tables' },
   'profile': { name: 'Профиль', path: '/admin/profile' }
 };
 
