@@ -58,7 +58,7 @@ export default function MainMenu({ options }) {
         boxShadow={bgShadow}
         borderRadius='20px'
         p='15px'>
-        {options.map((option, index) => (
+        {options && Array.isArray(options) ? options.map((option, index) => (
           <MenuItem
             key={index}
             transition='0.2s linear'
@@ -75,7 +75,8 @@ export default function MainMenu({ options }) {
               <Text fontSize='sm' fontWeight='400'>{option.label}</Text>
             </Flex>
           </MenuItem>
-        ))}
+        )) : null}
+
       </MenuList>
     </Menu>
   );
