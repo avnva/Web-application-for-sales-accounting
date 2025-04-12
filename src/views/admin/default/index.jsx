@@ -18,6 +18,7 @@ import ComplexTable from "views/admin/dataTables/components/ComplexTable";
 import PieCard from "views/admin/default/components/PieCard";
 import TotalSpent from "views/admin/default/components/TotalSpent";
 
+import axios from '../../../api/axios'
 export default function UserReports() {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -38,27 +39,60 @@ export default function UserReports() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const statsResponse = await fetch("/data/statistics.json");
-        setStatistics(await statsResponse.json());
+        const [
+          miniStatsRes,
+          revenueChartRes,
+          categoriesRes,
+          recentSalesRes,
+          top10ProductsRes,
+          top10ClientsRes,
+        ] = await Promise.all([
+          axios.get("/dashboard/mini-stats"),
+          axios.get("/dashboard/revenue-chart?period=month"), // можно сменить на 'week'
+          axios.get("/dashboard/popular-categories"),
+          axios.get("/dashboard/recent-sales"),
+          axios.get("/dashboard/top10-products"), // Новый запрос для топ-10 продуктов
+          axios.get("/dashboard/top10-clients"), // Новый запрос для топ-10 клиентов
+        ]);
 
-        const pieResponse = await fetch("/data/tableDataPie.json");
-        setTableDataPie(await pieResponse.json());
+        const stats = miniStatsRes.data;
+        setStatistics({
+          products: stats?.totalUnitsSold ?? 0,
+          clients: stats?.totalBuyers ?? 0,
+          orders: stats?.totalOrders ?? 0,
+          revenue: stats?.totalRevenue ?? 0,
+        });
 
-        const productsResponse = await fetch("/data/tableDataCheckProducts.json");
-        setTableDataCheckProducts(await productsResponse.json());
+        const pieDataNormalized = categoriesRes.data.map((item) => ({
+          name: item.category,
+          percentage: item.percentage,
+          quantity: item.count,
+        }));
 
-        const clientsResponse = await fetch("/data/tableDataCheckClients.json");
-        setTableDataCheckClients(await clientsResponse.json());
+        setTableDataPie(pieDataNormalized);
+        // Нормализуем данные для топ-10 продуктов
+        const normalizedTopProducts = top10ProductsRes.data.map((product) => ({
+          id: product.productId,  // Убедитесь, что ваш ответ от сервера имеет это поле
+          name: product.name,
+          sales: product.quantity,  // Здесь мы присваиваем количество продаж
+        }));
 
-        const complexResponse = await fetch("/data/tableDataComplex.json");
-        setTableDataComplex(await complexResponse.json());
 
-        const totalSpentResponse = await fetch("/data/tableDataTotalSpent.json");
-        const totalSpentData = await totalSpentResponse.json();
-        setTableDataTotalSpent(totalSpentData);
+        setTableDataCheckProducts(normalizedTopProducts);
+        const normalizedTopClients = top10ClientsRes.data.map((client) => ({
+          id: client.clientId,  // Идентификатор клиента
+          name: client.fullName,  // Имя клиента
+          purchaseAmount: client.total,  // Общая сумма покупок
+        }));
+        console.log(normalizedTopClients);
+        setTableDataCheckClients(normalizedTopClients); // Присваиваем данные топ-10 клиентов
+        setTableDataComplex(recentSalesRes.data);
+        console.log(recentSalesRes.data);
+
+        setTableDataTotalSpent(revenueChartRes.data);
 
       } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
+        console.error("Ошибка загрузки дашборда:", error);
       }
     };
 
@@ -71,22 +105,22 @@ export default function UserReports() {
         <MiniStatistics
           startContent={<IconBox w="56px" h="56px" bg={boxBg} icon={<Icon w="32px" h="32px" as={MdShoppingBasket} color={brandColor} />} />}
           name="Товары"
-          value={statistics.products}
+          value={statistics?.products ? statistics.products : 0}
         />
         <MiniStatistics
           startContent={<IconBox w="56px" h="56px" bg={boxBg} icon={<Icon w="32px" h="32px" as={MdPeopleAlt} color={brandColor} />} />}
           name="Покупатели"
-          value={statistics.clients}
+          value={statistics?.clients ? statistics.clients : 0}
         />
         <MiniStatistics
           startContent={<IconBox w="56px" h="56px" bg={boxBg} icon={<Icon w="32px" h="32px" as={MdFormatListBulleted} color={brandColor} />} />}
           name="Заказы"
-          value={statistics.orders}
+          value={statistics?.orders ? statistics.orders : 0}
         />
         <MiniStatistics
           startContent={<IconBox w="56px" h="56px" bg="linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)" icon={<Icon w="28px" h="28px" as={MdCurrencyRuble} color="white" />} />}
           name="Выручка"
-          value={`₽${statistics.revenue}`}
+          value={`₽${statistics.revenue || 0}`}
         />
       </SimpleGrid>
 

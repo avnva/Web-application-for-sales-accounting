@@ -24,8 +24,17 @@ import navImage from 'assets/img/layout/Navbar.png';
 import { MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { FaEthereum } from 'react-icons/fa';
-import routes from 'routes';
+//import routes from 'routes';
+import { useAuthRoute } from 'routes';
+import { useAuth } from 'contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 export default function HeaderLinks(props) {
+  const routes = useAuthRoute();
+  const { logout, user } = useAuth();
+  const handleLogout = () => {
+    logout();
+  }
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   // Chakra Color Mode
@@ -42,6 +51,10 @@ export default function HeaderLinks(props) {
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)',
   );
   const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+  const navigation = useNavigate();
+  const handleNavigation = () => {
+    navigation("/admin/profile");
+  }
   return (
     <Flex
       w={{ sm: '100%', md: 'auto' }}
@@ -222,7 +235,7 @@ export default function HeaderLinks(props) {
           <Avatar
             _hover={{ cursor: 'pointer' }}
             color="white"
-            name="Adela Parkson"
+            name={user.firstName + " " + user.lastName}
             bg="#11047A"
             size="sm"
             w="40px"
@@ -258,10 +271,12 @@ export default function HeaderLinks(props) {
               _focus={{ bg: 'none' }}
               borderRadius="8px"
               px="14px"
+              onClick={handleNavigation}
             >
               <Text fontSize="sm">Настройки профиля</Text>
             </MenuItem>
             <MenuItem
+              onClick={handleLogout}
               _hover={{ bg: 'none' }}
               _focus={{ bg: 'none' }}
               color="red.400"

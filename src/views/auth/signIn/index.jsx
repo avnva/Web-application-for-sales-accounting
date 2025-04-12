@@ -22,7 +22,8 @@
 */
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "api/axios"
 // Chakra imports
 import {
   Box,
@@ -47,9 +48,11 @@ import illustration from "assets/img/auth/auth.png";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
+import { useAuth } from "contexts/AuthContext";
 
 function SignIn() {
   // Chakra color mode
+
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -67,6 +70,27 @@ function SignIn() {
   );
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/user/login", {
+        email,
+        password,
+      });
+
+      const { token, user } = response.data;
+      login(token, user);
+      navigate("/admin/default"); // редирект после входа
+    } catch (err) {
+      alert("Неверные данные или ошибка сервера");
+    }
+  };
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -127,7 +151,7 @@ function SignIn() {
             </Text>
             <HSeparator />
           </Flex>
-          <FormControl>
+          <FormControl  >
             <FormLabel
               display='flex'
               ms='4px'
@@ -138,6 +162,8 @@ function SignIn() {
               Email<Text color={brandStars}>*</Text>
             </FormLabel>
             <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               isRequired={true}
               variant='auth'
               fontSize='sm'
@@ -158,6 +184,8 @@ function SignIn() {
             </FormLabel>
             <InputGroup size='md'>
               <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 isRequired={true}
                 fontSize='sm'
                 placeholder='Min. 8 characters'
@@ -202,6 +230,7 @@ function SignIn() {
               </NavLink>
             </Flex>
             <Button
+              onClick={handleSubmit}
               fontSize='sm'
               variant='brand'
               fontWeight='500'

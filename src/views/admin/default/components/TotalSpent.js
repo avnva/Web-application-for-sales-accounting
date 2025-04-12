@@ -65,15 +65,21 @@ export default function TotalSpent({ tableDataTotalSpent, ...rest }) {
 
   useEffect(() => {
     if (tableDataTotalSpent) {
-      if (totalSpentTimePeriod === "months") {
-        setRevenue(tableDataTotalSpent.halfYear.revenue); 
-        setLineChartData(tableDataTotalSpent.halfYear.lineChartData);
+      const dataBlock =
+        totalSpentTimePeriod === "months"
+          ? tableDataTotalSpent.halfYear
+          : tableDataTotalSpent.week;
+
+      if (dataBlock) {
+        setRevenue(dataBlock.revenue ?? 0);
+        setLineChartData(dataBlock.lineChartData ?? []);
       } else {
-        setRevenue(tableDataTotalSpent.week.revenue); 
-        setLineChartData(tableDataTotalSpent.week.lineChartData);
+        setRevenue(0);
+        setLineChartData([]);
       }
     }
   }, [tableDataTotalSpent, totalSpentTimePeriod]);
+
 
   const chartOptions = useMemo(() => {
     return {

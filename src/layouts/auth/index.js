@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import routes from 'routes.js';
-
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+//import routes from 'routes.js';
+import { useAuthRoute } from 'routes';
 // Chakra imports
 import { Box, useColorModeValue } from '@chakra-ui/react';
 
@@ -10,12 +10,16 @@ import { SidebarContext } from 'contexts/SidebarContext';
 
 // Custom Chakra theme
 export default function Auth() {
-  // states and functions
+  const routes = useAuthRoute();
+  const location = useLocation(); // Хук для получения текущего пути
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
+
+  // Функция для проверки, является ли текущий путь маршрутом full-screen-maps
   const getRoute = () => {
-    return window.location.pathname !== '/auth/full-screen-maps';
+    return location.pathname !== '/auth/full-screen-maps';
   };
+
+  // Функция для рендеринга маршрутов
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
       if (route.layout === '/auth') {
@@ -30,8 +34,10 @@ export default function Auth() {
       }
     });
   };
+
   const authBg = useColorModeValue('white', 'navy.900');
   document.documentElement.dir = 'ltr';
+
   return (
     <Box>
       <SidebarContext.Provider
@@ -55,7 +61,7 @@ export default function Auth() {
           {getRoute() ? (
             <Box mx="auto" minH="100vh">
               <Routes>
-                {getRoutes(routes)}
+                {getRoutes(routes)} {/* Здесь мы генерируем все маршруты */}
                 <Route
                   path="/"
                   element={<Navigate to="/auth/sign-in/default" replace />}

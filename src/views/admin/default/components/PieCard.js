@@ -39,10 +39,13 @@ export default function PieCard({ pieData, ...rest }) {
       theme: "dark",
       custom: ({ seriesIndex }) => {
         const category = pieChartData[seriesIndex];
-        return `<div>
-          <strong>${category.name}</strong>: ${category.quantity} шт<br />
+        if (!category) return ""; // Проверка на всякий случай
+
+        return `<div style="padding: 6px">
+          <strong>${category.name}</strong><br />
+          ${category.quantity} шт
         </div>`;
-      },
+      }
     },
     legend: {
       show: false,
