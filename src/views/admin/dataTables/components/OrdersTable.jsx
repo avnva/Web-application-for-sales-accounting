@@ -25,10 +25,12 @@ import {
     NumberInput,
     NumberInputField,
     Checkbox,
+    TableContainer,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { MdPerson, MdPhone, MdCalendarToday, MdLocalShipping, MdCardGiftcard, MdCreditCard, MdEdit, MdPriceCheck, MdAdd, MdCheck, MdCancel } from 'react-icons/md';
-
+import { Scrollbars } from 'react-custom-scrollbars-2';
+import { renderTrack, renderThumb, renderView } from "../../../../components/scrollbar/Scrollbar"
 import { FaShoppingCart, FaEdit } from 'react-icons/fa';
 import { MdDeleteForever } from 'react-icons/md';
 import {
@@ -44,10 +46,17 @@ import { useAuth } from 'contexts/AuthContext';
 import { AddIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import CreateOrderModal from '../Modals/CreateOrderModal';
 import { IoMdPricetag } from 'react-icons/io';
+import DeleteOrderDialog from '../Modals/DeleteOrderDialog';
 
 const columnHelper = createColumnHelper();
 
 export default function AllOrdersTable({ tableData, onAllUpdate }) {
+    const {
+        isOpen: isDeleteOrderOpen,
+        onOpen: onDeleteOrderOpen,
+        onClose: onDeleteOrderClose
+    } = useDisclosure();
+    const [orderToDelete, setOrderToDelete] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -146,19 +155,16 @@ export default function AllOrdersTable({ tableData, onAllUpdate }) {
                 <Flex justify="center" align="center" h="100%">
                     <Button
                         size="md"
-                        verticalAlign={`center`}
-                        textAlign={`center`}
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteOrder(info.row.original.id || info.row.original.orderId);
                         }}
-
                     >
-                        <MdDeleteForever color='purple.900' />
+                        <MdDeleteForever color="purple.500" />
                     </Button>
                 </Flex>
             ),
-        },
+        }
     ];
 
     const table = useReactTable({
@@ -367,12 +373,15 @@ export default function AllOrdersTable({ tableData, onAllUpdate }) {
             console.error('Ошибка удаления товара:', e);
         }
     };
-    const handleDeleteOrder = async (orderId) => {
-        if (!window.confirm('Удалить заказ?')) return;
+    const handleDeleteOrder = (orderId) => {
+        setOrderToDelete(orderId);
+        onDeleteOrderOpen();
+    };
 
+    const confirmDeleteOrder = async () => {
         try {
-            await axios.delete(`/dashboard/order/${orderId}`);
-            onAllUpdate();
+            await axios.delete(`/dashboard/order/${orderToDelete}`);
+            onAllUpdate(); // Обновляем таблицу
         } catch (e) {
             console.error('Ошибка удаления:', e);
         }
@@ -380,7 +389,13 @@ export default function AllOrdersTable({ tableData, onAllUpdate }) {
 
     return (
         <>
-            <Card w="100%" height="calc(100vh - 135px)" px="0px" overflowX={{ sm: 'scroll', lg: 'hidden' }} display="flex" flexDirection="column">
+            <DeleteOrderDialog
+                isOpen={isDeleteOrderOpen}
+                onClose={onDeleteOrderClose}
+                onDelete={confirmDeleteOrder}
+                orderId={orderToDelete}
+            />
+            <Card w="100%" height="calc(100vh - 135px)" px="0px" overflow="hidden" display="flex" flexDirection="column">
                 {/* Заголовок - фиксированная шапка */}
                 <Flex
                     px="25px"
@@ -407,101 +422,97 @@ export default function AllOrdersTable({ tableData, onAllUpdate }) {
                 </Flex>
 
                 {/* Таблица в скролл-контейнере */}
-                <Box overflowY="auto">
-                    <Table
-                        variant="simple"
-                        color="gray.500"
-                        mb="24px"
-                        mt="12px"
-                        fontFamily="'Montserrat', sans-serif"
-                    >
-                        <Thead>
-                            {table.getHeaderGroups().map(headerGroup => (
-                                <Tr key={headerGroup.id}>
-                                    {headerGroup.headers.map(header => (
-                                        <Th
-                                            fontSize={{ sm: '10px', lg: '12px' }}
-                                            color="gray.400"
-                                            key={header.id}
-                                            borderColor={borderColor}
-                                            onClick={header.column.getToggleSortingHandler()}
-                                            cursor="pointer"
-                                        >
-                                            <Flex justify="space-between" align="center" fontSize="sm" color="gray.400" gap={1}>
-                                                {flexRender(header.column.columnDef.header, header.getContext())}
-                                                {header.column.getIsSorted() === 'asc' ? (
-                                                    <ChevronUpIcon boxSize={4} />
-                                                ) : header.column.getIsSorted() === 'desc' ? (
-                                                    <ChevronDownIcon boxSize={4} />
-                                                ) : null}
-                                            </Flex>
-                                        </Th>
-                                    ))}
-                                </Tr>
-                            ))}
-                        </Thead>
-                        <Tbody>
-                            {table.getRowModel().rows.map(row => (
-                                <Tr
-                                    key={row.id}
-                                    onClick={(e) => {
-                                        // Останавливаем всплытие клика, если это не кнопка
-                                        e.stopPropagation();
-                                        handleOrderClick(row.original);
-                                    }}
-                                    _hover={{ bg: bgReadonly, cursor: 'pointer' }}
-                                >
-                                    {row.getVisibleCells().map(cell => (
-                                        <Td
-                                            h={`65px`}
-                                            key={cell.id}
-                                            borderColor="transparent"
-                                            fontSize="xl"
-                                            fontWeight="bold"
-                                            color={textColor}
-                                        >
-                                            {/* Для поля 'status' показываем кнопку с зеленой или красной галочкой */}
-                                            {cell.column.id === 'status' ? (
-                                                <Flex justifyContent={`center`} alignItems={`center`}>
-                                                    <Button
-                                                        colorScheme={cell.getValue() ? 'green' : 'red'}
-                                                        size="sm"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation(); // Останавливаем всплытие клика на строку
-                                                            const newStatus = !cell.getValue(); // инвертируем статус
-
-                                                            // Обновляем на сервере
-                                                            updatePaymentStatus(row.original.id || row.original.orderId, newStatus);
-
-                                                            // Локально обновляем
-                                                            row.original.status = newStatus;
-                                                        }}
-                                                    >
-                                                        {cell.getValue() ? <MdCheck /> : <MdCancel />}
-                                                    </Button>
-
+                <Box flex="1">
+                    <Scrollbars style={{ height: '100%' }} autoHide>
+                        <Table
+                            variant="simple"
+                            color="gray.500"
+                            mb="24px"
+                            mt="12px"
+                            fontFamily="'Montserrat', sans-serif"
+                        >
+                            <Thead>
+                                {table.getHeaderGroups().map(headerGroup => (
+                                    <Tr key={headerGroup.id}>
+                                        {headerGroup.headers.map(header => (
+                                            <Th
+                                                fontSize={{ sm: '10px', lg: '12px' }}
+                                                color="gray.400"
+                                                key={header.id}
+                                                borderColor={borderColor}
+                                                onClick={header.column.getToggleSortingHandler()}
+                                                cursor="pointer"
+                                            >
+                                                <Flex justify="space-between" align="center" fontSize="sm" color="gray.400" gap={1}>
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                                    {header.column.getIsSorted() === 'asc' ? (
+                                                        <ChevronUpIcon boxSize={4} />
+                                                    ) : header.column.getIsSorted() === 'desc' ? (
+                                                        <ChevronDownIcon boxSize={4} />
+                                                    ) : null}
                                                 </Flex>
-                                            ) : cell.column.id === 'actions' ? (
-                                                <Flex justifyContent={`center`} alignItems={`center`}>
-                                                    <Button
+                                            </Th>
+                                        ))}
+                                    </Tr>
+                                ))}
+                            </Thead>
 
-                                                        size="md"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation(); // Останавливаем всплытие клика на строку
-                                                            handleDeleteOrder(row.original.id || row.original.orderId);
-                                                        }}
-                                                    >
-                                                        <MdDeleteForever color='purple.500' />
-                                                    </Button>
-                                                </Flex>
-
-                                            ) : flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </Td>
-                                    ))}
-                                </Tr>
-                            ))}
-                        </Tbody>
-                    </Table>
+                            <Tbody>
+                                {table.getRowModel().rows.map(row => (
+                                    <Tr
+                                        key={row.id}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleOrderClick(row.original);
+                                        }}
+                                        _hover={{ bg: bgReadonly, cursor: 'pointer' }}
+                                    >
+                                        {row.getVisibleCells().map(cell => (
+                                            <Td
+                                                h="65px"
+                                                key={cell.id}
+                                                borderColor="transparent"
+                                                fontSize="xl"
+                                                fontWeight="bold"
+                                                color={textColor}
+                                            >
+                                                {cell.column.id === 'status' ? (
+                                                    <Flex justifyContent="center" alignItems="center">
+                                                        <Button
+                                                            colorScheme={cell.getValue() ? 'green' : 'red'}
+                                                            size="sm"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                const newStatus = !cell.getValue();
+                                                                updatePaymentStatus(row.original.id || row.original.orderId, newStatus);
+                                                                row.original.status = newStatus;
+                                                            }}
+                                                        >
+                                                            {cell.getValue() ? <MdCheck /> : <MdCancel />}
+                                                        </Button>
+                                                    </Flex>
+                                                ) : cell.column.id === 'actions' ? (
+                                                    <Flex justifyContent="center" alignItems="center">
+                                                        <Button
+                                                            size="md"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteOrder(row.original.id || row.original.orderId);
+                                                            }}
+                                                        >
+                                                            <MdDeleteForever color="purple.500" />
+                                                        </Button>
+                                                    </Flex>
+                                                ) : (
+                                                    flexRender(cell.column.columnDef.cell, cell.getContext())
+                                                )}
+                                            </Td>
+                                        ))}
+                                    </Tr>
+                                ))}
+                            </Tbody>
+                        </Table>
+                    </Scrollbars>
                 </Box>
             </Card>
 

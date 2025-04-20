@@ -1,4 +1,5 @@
 /* eslint-disable */
+import * as React from 'react';
 import {
   Flex,
   Box,
@@ -22,11 +23,19 @@ import {
   Input,
   Select,
   useDisclosure,
+  useToast,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  TableContainer,
 } from '@chakra-ui/react';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import { MdDelete } from "react-icons/md";
+import { renderTrack, renderThumb, renderView } from "../../../../components/scrollbar/Scrollbar"
 import { FaEdit, FaSortUp, FaSortDown, FaSort } from "react-icons/fa";
-
-import * as React from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -34,16 +43,54 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { AddIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
-const columnHelper = createColumnHelper();
-import { AddIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import CreateProductModal from '../Modals/CreateProductModal';
 import CreateClientModal from '../Modals/CreateClientModal';
 import { useAuth } from 'contexts/AuthContext';
 import axios from '../../../../api/axios';
 import CreateCategoryModal from '../Modals/CreateCategoryModal';
 
+const columnHelper = createColumnHelper();
+
+const DeleteDialog = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title = "Удаление",
+  message = "Вы уверены? Это действие нельзя отменить."
+}) => {
+  const cancelRef = React.useRef();
+
+  return (
+    <AlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            {title}
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            {message}
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose}>
+              Отмена
+            </Button>
+            <Button colorScheme="red" onClick={onConfirm} ml={3}>
+              Удалить
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  );
+};
 
 export default function ColumnTable({ onAllUpdate, productsData = [], clientsData = [], categories, onDeleteProduct, onEditProduct, onDeleteClient, onEditClient }) {
   const inputBg = useColorModeValue("white", "gray.700");
@@ -55,6 +102,7 @@ export default function ColumnTable({ onAllUpdate, productsData = [], clientsDat
   const [newProduct, setNewProduct] = React.useState({ name: "", price: "", category: "", weight: "" });
   const [newCategory, setNewCategory] = React.useState({ name: "" });
   const [selectedClient, setSelectedClient] = React.useState(null);
+  const toast = useToast();
   const [clientFormData, setClientFormData] = React.useState({
     id: '',
     fullName: '',
@@ -263,15 +311,70 @@ export default function ColumnTable({ onAllUpdate, productsData = [], clientsDat
     setIsModalOpen(true);
   };
 
+  // Состояния для диалогов удаления
+  const {
+    isOpen: isDeleteProductOpen,
+    onOpen: onDeleteProductOpen,
+    onClose: onDeleteProductClose
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteClientOpen,
+    onOpen: onDeleteClientOpen,
+    onClose: onDeleteClientClose
+  } = useDisclosure();
+  const [itemToDelete, setItemToDelete] = React.useState(null);
+
   const handleDeleteProduct = (id) => {
-    if (window.confirm('Удалить продукт?')) {
-      onDeleteProduct(id);
-    }
+    setItemToDelete(id);
+    onDeleteProductOpen();
   };
 
   const handleDeleteClient = (id) => {
-    if (window.confirm('Удалить клиента?')) {
-      onDeleteClient(id);
+    setItemToDelete(id);
+    onDeleteClientOpen();
+  };
+
+  const confirmDeleteProduct = async () => {
+    try {
+      await onDeleteProduct(itemToDelete);
+      toast({
+        title: 'Товар удален',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка удаления',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      onDeleteProductClose();
+    }
+  };
+
+  const confirmDeleteClient = async () => {
+    try {
+      await onDeleteClient(itemToDelete);
+      toast({
+        title: 'Клиент удален',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка удаления',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      onDeleteClientClose();
     }
   };
 
@@ -282,79 +385,84 @@ export default function ColumnTable({ onAllUpdate, productsData = [], clientsDat
   };
 
   return (
-    <Card height="calc(100vh - 135px)" flexDirection="column" w="100%" px="0px" overflowX={{ sm: 'scroll', lg: 'hidden' }}>
-      <Flex px="25px" mb="8px" h={`12`} justify="space-between" align="center">
-        <Flex align="center" gap={3}>
-          <Text fontSize="22px" fontWeight="700" color={textColor}>
-            {tableType === 'products' ? 'Товары' : 'Клиенты'}
-          </Text>
-          <Button
-            borderRadius="50%"
-            width="40px"
-            height="40px"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            onClick={handleAdd}
-          >
-            <AddIcon boxSize={4} color="purple.500" />
-          </Button>
+    <>
+      <Card height="calc(100vh - 135px)" flexDirection="column" w="100%" px="0px" overflow="hidden">
+        <Flex px="25px" mb="8px" h="12" justify="space-between" align="center">
+          <Flex align="center" gap={3}>
+            <Text fontSize="22px" fontWeight="700" color={textColor}>
+              {tableType === 'products' ? 'Товары' : 'Клиенты'}
+            </Text>
+            <Button
+              borderRadius="50%"
+              width="40px"
+              height="40px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              onClick={handleAdd}
+            >
+              <AddIcon boxSize={4} color="purple.500" />
+            </Button>
+          </Flex>
+          <Menu
+            options={[
+              { label: 'Товары', action: () => setTableType('products') },
+              { label: 'Клиенты', action: () => setTableType('clients') },
+            ]}
+          />
         </Flex>
-        <Menu
-          options={[
-            { label: 'Товары', action: () => setTableType('products') },
-            { label: 'Клиенты', action: () => setTableType('clients') },
-          ]}
-        />
-      </Flex>
 
-      <Box overflowY="auto">
-        <Table height={`full`} variant="simple" color="gray.500" mb="24px" mt="12px" fontFamily="'Montserrat', sans-serif">
-          <Thead height={`40px`}>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <Th
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    pe="10px"
-                    borderColor={borderColor}
-                    cursor="pointer"
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <Flex justifyContent="space-between" align="center" fontSize={{ sm: '10px', lg: '14px' }} color="gray.400">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {{
-                        asc: <ChevronUpIcon boxSize={4} />,
-                        desc: <ChevronDownIcon boxSize={4} />
-                      }[header.column.getIsSorted()]}
-                    </Flex>
-                  </Th>
+        {/* Box с фиксированной высотой */}
+        <Box flex="1" height="100%" overflow="hidden">
+          {/* Scrollbars оборачиваем Table */}
+          <Scrollbars style={{ width: '100%', height: '100%' }} autoHide>
+            <Table variant="simple" color="gray.500" mb="24px" mt="12px" fontFamily="'Montserrat', sans-serif">
+              <Thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <Th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        pe="10px"
+                        borderColor={borderColor}
+                        cursor="pointer"
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        <Flex justify="space-between" align="center" fontSize={{ sm: '10px', lg: '14px' }} color="gray.400">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {{
+                            asc: <ChevronUpIcon boxSize={4} />,
+                            desc: <ChevronDownIcon boxSize={4} />,
+                          }[header.column.getIsSorted()]}
+                        </Flex>
+                      </Th>
+                    ))}
+                  </Tr>
                 ))}
-              </Tr>
-            ))}
-          </Thead>
-
-          <Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <Td
-                    fontSize="md"
-                    fontWeight="700"
-                    color={textColor}
-                    minW="20px"
-                    borderColor="transparent"
-                    key={cell.id}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
+              </Thead>
+              <Tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <Td
+                        fontSize="md"
+                        fontWeight="700"
+                        color={textColor}
+                        minW="20px"
+                        borderColor="transparent"
+                        key={cell.id}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Td>
+                    ))}
+                  </Tr>
                 ))}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+              </Tbody>
+            </Table>
+          </Scrollbars>
+        </Box>
+      </Card>
 
       {/* Модальное окно для редактирования продукта */}
       <Modal isOpen={isModalOpen} onClose={handleCancel}>
@@ -514,6 +622,22 @@ export default function ColumnTable({ onAllUpdate, productsData = [], clientsDat
         inputBg={inputBg}
         inputTextColor={inputTextColor}
       />
-    </Card>
+      {/* Диалоги удаления */}
+      <DeleteDialog
+        isOpen={isDeleteProductOpen}
+        onClose={onDeleteProductClose}
+        onConfirm={confirmDeleteProduct}
+        title="Удаление товара"
+        message="Вы уверены, что хотите удалить этот товар?"
+      />
+
+      <DeleteDialog
+        isOpen={isDeleteClientOpen}
+        onClose={onDeleteClientClose}
+        onConfirm={confirmDeleteClient}
+        title="Удаление клиента"
+        message="Вы уверены, что хотите удалить этого клиента?"
+      />
+    </>
   );
 }
