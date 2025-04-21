@@ -115,7 +115,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Чтобы войти введите почту и пароль!
+            Чтобы войти, введите почту и пароль!
           </Text>
         </Box>
         <Flex
@@ -128,13 +128,7 @@ function SignIn() {
           mx={{ base: "auto", lg: "unset" }}
           me='auto'
           mb={{ base: "20px", md: "auto" }}>
-          <Flex align='center' mb='25px'>
-            <HSeparator />
-            <Text color='gray.400' mx='14px'>
-              или
-            </Text>
-            <HSeparator />
-          </Flex>
+
           <FormControl  >
             <FormLabel
               display='flex'
@@ -203,7 +197,7 @@ function SignIn() {
                   Запомнить меня
                 </FormLabel>
               </FormControl>
-              <NavLink to='/auth/forgot-password'>
+              {/* <NavLink to='/auth/forgot-password'>
                 <Text
                   color={textColorBrand}
                   fontSize='sm'
@@ -211,7 +205,7 @@ function SignIn() {
                   fontWeight='500'>
                   Забыли пароль?
                 </Text>
-              </NavLink>
+              </NavLink> */}
             </Flex>
             <Button
               onClick={handleSubmit}
