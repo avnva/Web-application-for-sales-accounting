@@ -46,41 +46,32 @@ namespace OrdersUsersApi.DashboardMain
             // 2. График выручки
             group.MapGet("/revenue-chart", async (AppDbContext db, int userId) =>
             {
-                // Сегодняшняя дата в UTC (без времени)
-                var today = DateTime.UtcNow.Date;
+                // Текущая дата в UTC с правильным Kind
+                var today = DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
 
-                // Начало недели (7 дней назад от сегодня)
-                var weekStart = today.AddDays(-7);
-
-                // Конец недели (сегодня)
-                var weekEnd = today;
-
-                Console.WriteLine($"weekStart: {weekStart}");  // Должно быть 7 дней назад
-                Console.WriteLine($"weekEnd: {weekEnd}");      // Должно быть сегодня
+                // --- Текущая неделя ---
+                var weekStart = today.AddDays(-6); // Начало недели 7 дней назад
+                var weekEnd = today.AddDays(1); // Завтра (чтобы включить сегодня полностью)
 
                 var weekOrders = await db.Orders
-                    .Where(o => o.Date >= weekStart && o.Date <= weekEnd && o.Client.UserId == userId)
+                    .Where(o => o.Date.UtcDateTime >= weekStart && o.Date.UtcDateTime < weekEnd && o.Client.UserId == userId)
                     .Include(o => o.Products)
                     .ToListAsync();
 
-                // Логируем количество заказов за неделю
-                Console.WriteLine($"Количество заказов за неделю: {weekOrders.Count}");
-
-                // --- Полгода: с начала месяца 6 месяцев назад до конца предыдущего месяца ---
-                var currentMonth = today.Month;
-                var currentYear = today.Year;
-                var sixMonthsAgo = today.AddMonths(-6);
-                var halfYearStart = new DateTime(sixMonthsAgo.Year, sixMonthsAgo.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-                var halfYearEnd = new DateTime(currentYear, currentMonth, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(-1);
+                // --- Полгода: с 1-го числа 6 месяцев назад по конец текущего месяца ---
+                var monthStart = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+                var sixMonthsAgoStart = new DateTime(monthStart.AddMonths(-5).Year, monthStart.AddMonths(-5).Month, 1, 0, 0, 0, DateTimeKind.Utc);
+                var currentMonthEnd = new DateTime(monthStart.Year, monthStart.Month, 1, 0, 0, 0, DateTimeKind.Utc)
+                    .AddMonths(1)
+                    .AddDays(-1);
 
                 var halfYearOrders = await db.Orders
-                    .Where(o => o.Date >= halfYearStart && o.Date <= halfYearEnd && o.Client.UserId == userId)
+                    .Where(o => o.Date.UtcDateTime >= sixMonthsAgoStart && o.Date.UtcDateTime <= currentMonthEnd && o.Client.UserId == userId)
                     .Include(o => o.Products)
                     .ToListAsync();
 
-                // --- Группировка по дням недели (за неделю) ---
-                // Получаем список всех дней недели за последний месяц
-                var allWeekDays = Enumerable.Range(0, 7)
+                // --- Группировка по дням (неделя) ---
+                var allWeekDays = Enumerable.Range(0, (int)(today - weekStart).TotalDays + 1)
                     .Select(d => weekStart.AddDays(d))
                     .ToList();
 
@@ -95,10 +86,10 @@ namespace OrdersUsersApi.DashboardMain
                             Units = dayOrders.Sum(x => x.Products.Sum(p => p.Quantity))
                         };
                     })
-                    .OrderBy(g => g.Label) // Сортировка по дате
+                    .OrderBy(g => g.Label)
                     .ToList();
 
-                // --- Группировка по месяцам (за полгода) ---
+                // --- Группировка по месяцам (полгода) ---
                 var halfYearData = halfYearOrders
                     .GroupBy(o => new { o.Date.Year, o.Date.Month })
                     .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
@@ -137,6 +128,9 @@ namespace OrdersUsersApi.DashboardMain
 
                 return Results.Ok(result);
             });
+
+
+
 
             // 3. Популярные категории
             group.MapGet("/popular-categories", async (AppDbContext db, int userId) =>

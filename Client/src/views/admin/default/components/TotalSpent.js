@@ -72,6 +72,7 @@ export default function TotalSpent({ tableDataTotalSpent, ...rest }) {
 
       if (dataBlock) {
         setRevenue(dataBlock.revenue ?? 0);
+
         setLineChartData(dataBlock.lineChartData ?? []);
       } else {
         setRevenue(0);
@@ -90,14 +91,27 @@ export default function TotalSpent({ tableDataTotalSpent, ...rest }) {
     });
   };
 
+  const getMonthLabels = (dates) => {
+    const monthNames = [
+      "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+      "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+    ];
+
+    return dates.map(date => {
+      const [month, year] = date.split('.');  // Разделяем строку по точке
+      const monthName = monthNames[parseInt(month, 10) - 1];  // Преобразуем месяц в название
+      return `${monthName} ${year}`;  // Возвращаем строку вида "Март 2025"
+    });
+  };
+
   const chartOptions = useMemo(() => {
     return {
       ...commonChartOptions,
       xaxis: {
         type: "category",
         categories: totalSpentTimePeriod === "months"
-          ? ["Октябрь", "Ноябрь", "Декабрь", "Январь", "Февраль", "Март"]
-          : getWeekDaysLabels(tableDataTotalSpent?.week?.categories || []),  // Преобразуем даты в дни недели
+          ? getMonthLabels(tableDataTotalSpent?.halfYear?.categories || [])
+          : getWeekDaysLabels(tableDataTotalSpent?.week?.categories || []),
         labels: {
           style: {
             colors: "#A3AED0",
@@ -108,8 +122,29 @@ export default function TotalSpent({ tableDataTotalSpent, ...rest }) {
         axisBorder: { show: false },
         axisTicks: { show: false },
       },
+      yaxis: {
+        labels: {
+          style: {
+            colors: "#A3AED0",
+            fontSize: "11px",
+            fontWeight: "500",
+          },
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function (val, { seriesIndex, w }) {
+            const name = w.config.series[seriesIndex]?.name;
+            if (name === "Продажи") {
+              return Math.round(val);
+            }
+            return val.toFixed(2); // например, 1.91
+          },
+        },
+      },
     };
   }, [totalSpentTimePeriod, tableDataTotalSpent]);
+
 
   if (!lineChartData || lineChartData.length === 0) {
     return null;
