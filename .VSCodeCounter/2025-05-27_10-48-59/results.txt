@@ -1,0 +1,103 @@
+Date : 2025-05-27 10:48:59
+Directory : c:\Users\юзер\Web-application-for-sales-accounting-1\Serv
+Total : 54 files,  3786 codes, 135 comments, 1012 blanks, all 4933 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C#       |         50 |      3,699 |        135 |      1,003 |      4,837 |
+| JSON     |          3 |         66 |          0 |          5 |         71 |
+| XML      |          1 |         21 |          0 |          4 |         25 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                  | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                     |         54 |      3,786 |        135 |      1,012 |      4,933 |
+| Server                                                                                                                                |         54 |      3,786 |        135 |      1,012 |      4,933 |
+| Server\OrdersUsersApI                                                                                                                 |         54 |      3,786 |        135 |      1,012 |      4,933 |
+| Server\OrdersUsersApI (Files)                                                                                                         |          4 |         72 |          0 |         11 |         83 |
+| Server\OrdersUsersApI\Context                                                                                                         |          2 |        174 |          3 |         26 |        203 |
+| Server\OrdersUsersApI\DTO                                                                                                             |         11 |        107 |          0 |         13 |        120 |
+| Server\OrdersUsersApI\DTO\Catrgory                                                                                                    |          1 |          7 |          0 |          1 |          8 |
+| Server\OrdersUsersApI\DTO\Client                                                                                                      |          2 |         21 |          0 |          3 |         24 |
+| Server\OrdersUsersApI\DTO\Order                                                                                                       |          3 |         31 |          0 |          4 |         35 |
+| Server\OrdersUsersApI\DTO\Products                                                                                                    |          2 |         18 |          0 |          2 |         20 |
+| Server\OrdersUsersApI\DTO\User                                                                                                        |          3 |         30 |          0 |          3 |         33 |
+| Server\OrdersUsersApI\DashboardMain                                                                                                   |          6 |        785 |         61 |        135 |        981 |
+| Server\OrdersUsersApI\DashboardMain (Files)                                                                                           |          1 |         15 |          5 |          8 |         28 |
+| Server\OrdersUsersApI\DashboardMain\Categories                                                                                        |          1 |         32 |          2 |          4 |         38 |
+| Server\OrdersUsersApI\DashboardMain\Clients                                                                                           |          1 |        145 |          5 |         19 |        169 |
+| Server\OrdersUsersApI\DashboardMain\MiniStatistics                                                                                    |          1 |        180 |         12 |         28 |        220 |
+| Server\OrdersUsersApI\DashboardMain\Orders                                                                                            |          1 |        294 |         31 |         58 |        383 |
+| Server\OrdersUsersApI\DashboardMain\Products                                                                                          |          1 |        119 |          6 |         18 |        143 |
+| Server\OrdersUsersApI\Helper                                                                                                          |          1 |         27 |          0 |          4 |         31 |
+| Server\OrdersUsersApI\Migrations                                                                                                      |         19 |      2,304 |         46 |        765 |      3,115 |
+| Server\OrdersUsersApI\Models                                                                                                          |          6 |         87 |          4 |         22 |        113 |
+| Server\OrdersUsersApI\Properties                                                                                                      |          1 |         41 |          0 |          1 |         42 |
+| Server\OrdersUsersApI\ServerConfig                                                                                                    |          3 |         85 |          0 |         13 |         98 |
+| Server\OrdersUsersApI\UserEndpoints                                                                                                   |          1 |        104 |         21 |         22 |        147 |
++---------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                              | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Context\AppDbContext.cs                               | C#       |         62 |          0 |          9 |         71 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Context\DbInitializer.cs                              | C#       |        112 |          3 |         17 |        132 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Catrgory\CategoryDTO.cs                           | C#       |          7 |          0 |          1 |          8 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Client\ClientDTO.cs                               | C#       |         10 |          0 |          1 |         11 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Client\NewClientDTO.cs                            | C#       |         11 |          0 |          2 |         13 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Order\CreateOrderDTO.cs                           | C#       |         13 |          0 |          2 |         15 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Order\OrderProductDTO.cs                          | C#       |         11 |          0 |          1 |         12 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Order\UpdateOrderStatusDTO.cs                     | C#       |          7 |          0 |          1 |          8 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Products\AddProductToOrderDTO.cs                  | C#       |          8 |          0 |          1 |          9 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\Products\ProductDto.cs                            | C#       |         10 |          0 |          1 |         11 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\User\LoginDTO.cs                                  | C#       |          8 |          0 |          1 |          9 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\User\RegisterDTO.cs                               | C#       |         10 |          0 |          1 |         11 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DTO\User\UpdateUserDTO.cs                             | C#       |         12 |          0 |          1 |         13 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DashboardMain\Categories\CategoriesEndpoints.cs       | C#       |         32 |          2 |          4 |         38 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DashboardMain\Clients\ClientsEndpoints.cs             | C#       |        145 |          5 |         19 |        169 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DashboardMain\DashboardEndpoints.cs                   | C#       |         15 |          5 |          8 |         28 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DashboardMain\MiniStatistics\MiniStatsEndpoints.cs    | C#       |        180 |         12 |         28 |        220 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DashboardMain\Orders\OrdersEndpoints.cs               | C#       |        294 |         31 |         58 |        383 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\DashboardMain\Products\ProductsEndpoints.cs           | C#       |        119 |          6 |         18 |        143 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Helper\JwtHelper.cs                                   | C#       |         27 |          0 |          4 |         31 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250408150001_createDB.Designer.cs        | C#       |        171 |          2 |         62 |        235 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250408150001_createDB.cs                 | C#       |        144 |          3 |         16 |        163 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250409132421_userTable.Designer.cs       | C#       |        192 |          2 |         70 |        264 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250409132421_userTable.cs                | C#       |         32 |          3 |          4 |         39 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250410130544_ss.Designer.cs              | C#       |        190 |          2 |         69 |        261 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250410130544_ss.cs                       | C#       |         23 |          3 |          4 |         30 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250411145106_totalPrice.Designer.cs      | C#       |        188 |          2 |         68 |        258 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250411145106_totalPrice.cs               | C#       |         23 |          3 |          4 |         30 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250411145828_total.Designer.cs           | C#       |        190 |          2 |         69 |        261 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250411145828_total.cs                    | C#       |         23 |          3 |          4 |         30 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250411155329_cashbak.Designer.cs         | C#       |        192 |          2 |         70 |        264 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250411155329_cashbak.cs                  | C#       |         23 |          3 |          4 |         30 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250412200440_updateFk.Designer.cs        | C#       |        208 |          2 |         75 |        285 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250412200440_updateFk.cs                 | C#       |         40 |          3 |          8 |         51 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250416162810_cashbackPercent.Designer.cs | C#       |        210 |          2 |         76 |        288 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250416162810_cashbackPercent.cs          | C#       |         23 |          3 |          4 |         30 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250416200109_nusad.Designer.cs           | C#       |        210 |          2 |         76 |        288 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\20250416200109_nusad.cs                    | C#       |         14 |          3 |          6 |         23 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Migrations\AppDbContextModelSnapshot.cs               | C#       |        208 |          1 |         76 |        285 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Models\Client.cs                                      | C#       |         15 |          1 |          3 |         19 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Models\Order.cs                                       | C#       |         23 |          1 |          7 |         31 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Models\OrderProduct.cs                                | C#       |         14 |          1 |          4 |         19 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Models\Product.cs                                     | C#       |         13 |          0 |          1 |         14 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Models\ProductCategory.cs                             | C#       |          9 |          0 |          2 |         11 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Models\User.cs                                        | C#       |         13 |          1 |          5 |         19 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\OrdersUsersApi.csproj                                 | XML      |         21 |          0 |          4 |         25 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Program.cs                                            | C#       |         26 |          0 |          3 |         29 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\Properties\launchSettings.json                        | JSON     |         41 |          0 |          1 |         42 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\ServerConfig\AppBuilderExtensions.cs                  | C#       |         23 |          0 |          5 |         28 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\ServerConfig\DbInitializerExtension.cs                | C#       |         15 |          0 |          2 |         17 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\ServerConfig\ServiceExtensions.cs                     | C#       |         47 |          0 |          6 |         53 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\UserEndpoints\UserEndpoints.cs                        | C#       |        104 |         21 |         22 |        147 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\appsettings.Development.json                          | JSON     |          8 |          0 |          1 |          9 |
+| c:\Users\юзер\Web-application-for-sales-accounting-1\Serv\Server\OrdersUsersApI\appsettings.json                                      | JSON     |         17 |          0 |          3 |         20 |
+| Total                                                                                                                                 |          |      3,786 |        135 |      1,012 |      4,933 |
++---------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
