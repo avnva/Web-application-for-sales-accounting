@@ -11,7 +11,6 @@ public class Order
 
     public ICollection<OrderProduct> Products { get; set; } = new List<OrderProduct>();
 
-    // Убираем set, делаем вычисляемым
     public decimal TotalPrice { get; set; }
 
     public float DiscountPercent { get; set; }
